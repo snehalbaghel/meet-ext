@@ -6,7 +6,7 @@ import DateTG from './date';
 
 const meetMeta: Meta = {
   name: 'meet',
-  description: 'Google meet',
+  description: 'Google Meet',
   entity: 'meet',
   icon: 'meet.png',
 };

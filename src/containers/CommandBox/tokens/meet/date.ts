@@ -20,7 +20,11 @@ function parseDate(input: string, _props: Meta) {
   try {
     // 1jan
     if (isDigit(input[0])) {
-      return parse(input, 'dMMM', new Date());
+      const parsed = parse(input, 'dMMM', new Date());
+      if (isNaN(parsed.getTime())) {
+        return null;
+      }
+      return parsed;
     }
 
     // today, tomorrow, dayafter
@@ -65,10 +69,10 @@ function suggestDate(matchStr: string, nodeType?: string) {
 
   const parsed = parseDate(matchStr, dummyMeta);
 
-  let description = 'invalid! (format: 1mar)';
+  let description = 'Type value..';
 
   if (parsed) {
-    description = format(parsed, 'd MMMM');
+    description = format(parsed, 'dd MMMM');
   }
 
   if (isDigit(matchStr[0])) {
@@ -101,7 +105,7 @@ export default new TokenGroup({
   tokens: [
     {
       name: 'date',
-      description: 'Meeting Date (Today)',
+      description: 'Date',
       entity: 'date',
       icon: 'date.png',
     },

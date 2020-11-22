@@ -51,7 +51,7 @@ class RichTextEditor extends React.Component<CommandLineProps> {
             'Mod-z': undo,
             'Mod-Shift-z': redo,
             'Shift-Enter': this.executeTr,
-            'Mod-Space': this.showPopup,
+            'Mod-Space': this.recalculateSuggestions,
             'Mod-u': this.resetState,
           }),
         ],
@@ -74,7 +74,6 @@ class RichTextEditor extends React.Component<CommandLineProps> {
         this.dispatchTransaction(tr);
       } else if (cmd.length) {
         if (cmd[0] === ';') {
-          console.log('sup');
           this.dispatchTransaction(
             this.state.editorState.tr.setMeta('action', 'execute')
           );
@@ -102,12 +101,12 @@ class RichTextEditor extends React.Component<CommandLineProps> {
     }
   }
 
-  showPopup(
+  recalculateSuggestions(
     state: EditorState,
     dispatch: ((tr: Transaction) => void) | undefined
   ): boolean {
-    const showPopupTr = state.tr.setMeta('action', 'popup');
-    dispatch && dispatch(showPopupTr);
+    const recalculateTr = state.tr.setMeta('action', 'recalculate');
+    dispatch && dispatch(recalculateTr);
     return true;
   }
 

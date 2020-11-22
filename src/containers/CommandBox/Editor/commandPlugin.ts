@@ -43,7 +43,7 @@ function resetState() {
   };
 }
 
-const lastTokenRegex = /(?<rest>.*?)(?<trigger>\s{2}|[\s:,]{0,1})(?<token>(?<=[:,])\w+[\s\w(-]+\)?|\w+)?$/;
+const lastTokenRegex = /(?<rest>.*?)(?<trigger>\s{2}|[\s:,]{0,1})(?<token>(?<=[:,])\w+[\s\w(-.]+\)?|\w+)?$/;
 
 /**
  * Basically the middleware responsible for reacting to text and creating nodes accordingly
@@ -73,7 +73,7 @@ const getCommandPlugin = (
 
   /**
    * TODO: Move this outside
-   * get suggestions based on command input
+   * Finds the last relevent token and suggests next tokens
    */
   function getSuggestions(nodeStack: Node[], match: string, trigger?: string) {
     const commandStack: Token<Meta>[] = nodeStack.map((n) => n.attrs.token);
@@ -130,6 +130,7 @@ const getCommandPlugin = (
       },
       // apply tr to produce new state
       apply(tr, state: CommandState) {
+        console.log({ tr });
         const cursorPos = tr.selection.to;
         const text = tr.doc.textBetween(0, cursorPos);
         let newState: Partial<CommandState> = {};
@@ -139,8 +140,16 @@ const getCommandPlugin = (
 
         const action = tr.getMeta('action');
 
+        /**
+         * User actions are coded here
+         */
         if (action) {
           if (action === 'execute') {
+            /**
+             * When you press shift+enter
+             * Parse and return
+             * TODO: Move this into a function
+             */
             const rawValues: any[] = [];
             const triggers: string[] = [];
             const stack = getNodeStack(tr.doc);
@@ -206,7 +215,7 @@ const getCommandPlugin = (
 
             const exec = tr.getMeta('exec');
             exec(parsed, tr.doc.textContent);
-          } else if (action === 'popup') {
+          } else if (action === 'recalculate') {
             const trigger = commandMatch?.groups?.trigger;
             const token = commandMatch?.groups?.token;
             const nodeStack = getNodeStack(tr.doc);
@@ -219,6 +228,8 @@ const getCommandPlugin = (
             newState.activeSelectionIndex = 0;
           } else if (action === 'reset') {
             newState = resetState();
+          } else if (action === 'refresh_state') {
+            // TODO
           }
         } else if (commandMatch) {
           const token = commandMatch?.groups?.token;
@@ -230,25 +241,30 @@ const getCommandPlugin = (
           const to = cursorPos;
           const from = to - (token?.length || 0);
 
+          //
           newState.activeSelection = {
             to,
             from,
           };
 
+          /**
+           * Suggest root tokens
+           */
           if (nodeStack.length === 0) {
-            if (token) {
-              newState.suggestions = RootTokenGroups.flatMap((tg) => {
-                return tg.match(token, 'root');
-              });
+            // if (token) {
+            newState.suggestions = RootTokenGroups.flatMap((tg) => {
+              return tg.match(token || '', 'root');
+            });
 
-              newState.activeSelectionIndex = 0;
-            }
-            /* Suggest next */
-          } else if (token && trigger) {
-            newState.suggestions = getSuggestions(nodeStack, token, trigger);
             newState.activeSelectionIndex = 0;
-          } else if (trigger === ':' && trigger !== state.prevTrigger) {
-            newState.suggestions = getSuggestions(nodeStack, '', trigger);
+            // }
+            /* Suggest next */
+          } else {
+            newState.suggestions = getSuggestions(
+              nodeStack,
+              token || '',
+              trigger
+            );
             newState.activeSelectionIndex = 0;
           }
 
@@ -323,13 +339,8 @@ const getCommandPlugin = (
           tr = tr.insertText(nextTrigger);
           view.dispatch(tr);
 
-          state.activeSelectionIndex = 0;
-          state.suggestions = [];
-          state.popup = false;
-
           return true;
         } else if (esc) {
-          popup(false);
           updateSelection(0);
           return true;
         }

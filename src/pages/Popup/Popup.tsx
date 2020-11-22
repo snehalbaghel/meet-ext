@@ -11,7 +11,6 @@ import { Paper } from '@material-ui/core';
 const FlexContainer = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 8px;
   padding-bottom: 0;
 `;
 
@@ -19,6 +18,9 @@ const CommandWrapper = styled(Paper)`
   /* height: 56px; */
   border-radius: 14px;
   padding: 8.3px;
+  margin: 8px;
+  margin-bottom: 0px;
+  font-family: 'Ubuntu Mono', monospace;
 `;
 
 const SubtitleIcon = styled(HistoryIcon)`
@@ -27,11 +29,11 @@ const SubtitleIcon = styled(HistoryIcon)`
 `;
 
 const Subtitle = styled.span`
-  padding-top: 4px;
   font-size: 14px;
   color: ${(props) => props.theme.greyDarkest};
   display: flex;
   align-items: center;
+  margin: 4px 8px;
 `;
 
 const SuggestionPanel = styled.div`
@@ -98,7 +100,7 @@ const Popup: React.FC = () => {
   }, []);
 
   useSelector((state) => {
-    console.log({ state });
+    // console.log({ state });
   });
 
   return (
@@ -116,7 +118,7 @@ const Popup: React.FC = () => {
         History
       </Subtitle>
       <SuggestionPanel aria-label="suggestion list">
-        <Suggestions />
+        <Suggestions suggestions={popper.suggestions} active={active} />
       </SuggestionPanel>
     </FlexContainer>
   );

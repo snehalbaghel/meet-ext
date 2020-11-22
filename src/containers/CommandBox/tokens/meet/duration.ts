@@ -28,7 +28,7 @@ function suggestDuration(matchStr: string, nodeType?: string) {
     return [];
   }
 
-  let description = 'invalid!';
+  let description = 'Type value..';
   const parsed = parseDuration(matchStr, dummyMeta);
 
   if (parsed) {
@@ -62,9 +62,9 @@ export default new TokenGroup({
   tokens: [
     {
       name: 'duration',
-      description: 'Meeting Duration (30 Mins)',
+      description: 'Duration',
       icon: 'duration.png',
-      entity: 'diration',
+      entity: 'duration',
     },
   ],
   next: [durationValueTG],

@@ -43,6 +43,7 @@ class ProseMirrorEditorView extends React.Component<PMEditorViewProps> {
     if (execute) {
       tx.setMeta('exec', this.props.execute);
     }
+
     const editorState = this.props.editorState.apply(tx);
 
     if (this._editorView != null) {
@@ -66,6 +67,10 @@ class ProseMirrorEditorView extends React.Component<PMEditorViewProps> {
         this._editorView.focus();
       }
     }
+  }
+
+  componentDidMount() {
+    this.focus();
   }
 
   componentWillUnmount() {

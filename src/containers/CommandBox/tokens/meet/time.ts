@@ -15,10 +15,15 @@ function parseTime(input: string, _props: Meta) {
   if (!input) {
     return null;
   }
+  input = input.trim();
 
   try {
-    if (input.length <= 2) {
-      // 10
+    if (input.length <= 3) {
+      // 10 or 10.
+      if (input.endsWith('.')) {
+        input = input.slice(0, -1);
+      }
+
       return parse(input, 'H', new Date());
     } else {
       // 10.30
@@ -37,10 +42,10 @@ function suggestTime(matchStr: string, nodeType?: string) {
 
   const parsed = parseTime(matchStr, dummyMeta);
 
-  let description = 'invalid! (format: 16.30)';
+  let description = 'Type value..';
 
   if (parsed) {
-    description = format(parsed, 'h:m aaaa');
+    description = format(parsed, 'hh:mm b');
   }
 
   return [
@@ -70,9 +75,9 @@ export default new TokenGroup({
   tokens: [
     {
       name: 'time',
-      description: 'Meeting Time (Now)',
+      description: 'Time',
       icon: 'time.png',
-      entity: 'diration',
+      entity: 'time',
     },
   ],
   next: [timeValueTG],
