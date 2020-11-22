@@ -9,11 +9,7 @@ import { ThemeProvider } from 'styled-components';
 const store = new Store();
 
 const theme = {
-  blue: '#018CDE',
-  blueDark: '#318ECC',
-  blueDarker: '#006E9B',
-  blueLighter: '#E8F5FF',
-  commandRed: '#ef5e71',
+  commandBlue: '#006E9B',
   errorRedLight: '#ffcdd2',
   errorRed: '#E06F5D',
   errorRedDark: '#CE4A50',

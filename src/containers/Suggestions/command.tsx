@@ -24,7 +24,7 @@ const CommandText = styled.span`
   line-height: 1.5;
   font-family: 'Ubuntu Mono', monospace;
 
-  color: ${(props) => props.theme.commandRed};
+  color: ${(props) => props.theme.commandBlue};
 `;
 
 const CommandExample = styled.span`
@@ -50,6 +50,8 @@ function getSuggestionImage(img: string) {
       return <EventIcon />;
     case 'duration.png':
       return <HourglassEmptyIcon />;
+    case 'login.png':
+      return 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/200px-Google_%22G%22_Logo.svg.png';
     default:
   }
 }

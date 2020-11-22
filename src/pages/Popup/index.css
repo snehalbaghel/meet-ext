@@ -16,7 +16,7 @@ code {
 
 /* Prosemirror nodes */
 span.root {
-  color: #ef5e71;
+  color: #006e9b;
 }
 
 span.key {
@@ -24,7 +24,7 @@ span.key {
 }
 
 span.value {
-  color: #018cde;
+  color: #009c7d;
 }
 
 .ProseMirror {
@@ -38,7 +38,7 @@ span.value {
   -webkit-font-variant-ligatures: none;
   font-variant-ligatures: none;
   font-feature-settings: 'liga' 0; /* the above doesn't seem to work in Edge */
-  line-height: 1.15;
+  line-height: 1.25;
 }
 
 .ProseMirror pre {

@@ -2,11 +2,13 @@ export interface User {
   name: string;
   email: string;
   img: string;
-  authCode: string;
+  accessToken: string;
+  idToken: string;
 }
 
 export interface UsersState {
-  [id: string]: User;
+  default_id: string;
+  users: { [id: string]: User };
 }
 
 /**
@@ -27,12 +29,4 @@ interface DeleteUserAction {
   id: string;
 }
 
-interface RefreshUserAction {
-  type: typeof REFRESH_USER;
-  id: string;
-}
-
-export type UserActionTypes =
-  | AddUserAction
-  | DeleteUserAction
-  | RefreshUserAction;
+export type UserActionTypes = AddUserAction | DeleteUserAction;

@@ -13,6 +13,19 @@ export interface Meta {
   freeText?: boolean;
 }
 
-const RootTokenGroups: TokenGroup[] = [MeetTG];
+const loginMeta: Meta = {
+  name: 'login',
+  description: 'Google Login',
+  entity: 'login',
+  icon: 'login.png',
+};
+
+const LoginTG = new TokenGroup({
+  nodeType: 'root',
+  leaf: true,
+  tokens: [loginMeta],
+});
+
+const RootTokenGroups: TokenGroup[] = [MeetTG, LoginTG];
 
 export default RootTokenGroups;

@@ -1,6 +1,8 @@
-import { extractAccessToken } from '../util';
+import { extractTokens } from '../util';
 import { browser } from 'webextension-polyfill-ts';
-import { getPrimaryEmail, getUsersContacts, makeMeeting } from './gapi';
+import { v4 as uuid } from 'uuid';
+import jwt_decode from 'jwt-decode';
+import { getUsersContacts, makeMeeting } from './gapi';
 // @ts-ignore
 import secrets from 'secrets';
 
@@ -11,16 +13,33 @@ const SCOPES = [
   'email',
   'profile',
   'https://www.googleapis.com/auth/calendar',
-  'https://www.googleapis.com/auth/contacts.readonly',
-  'https://www.googleapis.com/auth/contacts.other.readonly',
 ];
 const AUTH_URL = `https://accounts.google.com/o/oauth2/v2/auth\
 ?client_id=${CLIENT_ID}\
-&response_type=token\
+&response_type=id_token+token\
 &redirect_uri=${encodeURIComponent(REDIRECT_URL)}\
-&prompt=select_account\
+&nonce=${uuid()}\
 &scope=${encodeURIComponent(SCOPES.join(' '))}`;
 const VALIDATION_BASE_URL = 'https://www.googleapis.com/oauth2/v3/tokeninfo';
+
+interface JWTBody {
+  iss: string;
+  azp: string;
+  aud: string;
+  sub: string;
+  email: string;
+  email_verified: boolean;
+  at_hash: string;
+  nonce: string;
+  name: string;
+  picture: string;
+  given_name: string;
+  family_name: string;
+  locale: string;
+  iat: number;
+  exp: number;
+  jti: string;
+}
 
 /**
 Validate the token contained in redirectURL.
@@ -30,12 +49,13 @@ matches the clientID, then the response is valid
 - otherwise it is not valid
 */
 async function validate(redirectURL: string) {
-  const accessToken = extractAccessToken(redirectURL);
-  if (!accessToken) {
+  const tokens = extractTokens(redirectURL);
+
+  if (!tokens) {
     throw 'Authorization failure';
   }
 
-  console.log({ accessToken });
+  const { accessToken, idToken } = tokens;
 
   const validationURL = `${VALIDATION_BASE_URL}?access_token=${accessToken}`;
   const validationRequest = new Request(validationURL, {
@@ -48,11 +68,10 @@ async function validate(redirectURL: string) {
     throw 'Token validation error';
   }
 
-  await getPrimaryEmail(accessToken);
-
   const json = await validationResponse.json();
-  if (json.aud && json.aud === CLIENT_ID) {
-    return accessToken;
+  if (json.aud && json.aud === CLIENT_ID && idToken) {
+    const user = jwt_decode(idToken) as JWTBody;
+    return { accessToken, user, idToken };
   }
 
   throw 'Token validation error';
@@ -63,17 +82,21 @@ Authenticate and authorize using browser.identity.launchWebAuthFlow().
 If successful, this resolves with a redirectURL string that contains
 an access token.
 */
-export async function authorize() {
+export async function authorize(prompt?: boolean) {
+  let authUrl = AUTH_URL;
+
+  if (prompt) {
+    authUrl += '&prompt=select_account';
+  }
+
   const redirectURL = await browser.identity.launchWebAuthFlow({
     interactive: true,
-    url: AUTH_URL,
+    url: authUrl,
   });
 
   try {
-    const token = await validate(redirectURL);
-    const email = await getPrimaryEmail(token);
-
-    return { email, token };
+    const user = await validate(redirectURL);
+    return user;
   } catch (error) {
     console.error({ error });
   }

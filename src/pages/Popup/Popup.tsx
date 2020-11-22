@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import CommandBox from '../../containers/CommandBox';
 import styled from 'styled-components';
@@ -7,6 +7,7 @@ import Suggestions from '../../containers/Suggestions';
 import { ParsedCommand, Token } from '../../containers/CommandBox/types';
 import { Meta } from '../../containers/CommandBox/tokens';
 import { Paper } from '@material-ui/core';
+import { loginUser } from './backgroundActions';
 
 const FlexContainer = styled.div`
   display: flex;
@@ -85,6 +86,10 @@ const Popup: React.FC = () => {
     []
   );
 
+  // useEffect(() => {
+  //   dispatch({ type: 'LOGIN_USER' });
+  // }, []);
+
   const updateSelection = useCallback((i: number) => {
     setActive(i);
 
@@ -95,12 +100,22 @@ const Popup: React.FC = () => {
   }, []);
 
   const execute = useCallback((parsed: ParsedCommand, textDirty: string) => {
+    switch (parsed.cmd) {
+      case 'login':
+        dispatch(loginUser());
+        break;
+      case 'meet':
+        break;
+      default:
+        break;
+    }
+    console.log({ parsed, textDirty });
     return true;
     // TODO
   }, []);
 
   useSelector((state) => {
-    // console.log({ state });
+    console.log({ state });
   });
 
   return (

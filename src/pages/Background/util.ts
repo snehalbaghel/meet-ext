@@ -1,11 +1,17 @@
 /**
  * Extract access token from oauth redirect
  */
-export function extractAccessToken(redirectUri: string) {
-  let m = redirectUri.match(/[#?](.*)/);
+export function extractTokens(redirectUri: string) {
+  const m = redirectUri.match(/[#?](.*)/);
   if (!m || m.length < 1) return null;
   let params = new URLSearchParams(m[1].split('#')[0]);
-  return params.get('access_token');
+  const access_token = params.get('access_token');
+  const id_token = params.get('id_token');
+
+  return {
+    accessToken: access_token,
+    idToken: id_token,
+  };
 }
 
 /**

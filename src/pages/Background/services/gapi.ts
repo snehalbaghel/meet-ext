@@ -10,34 +10,6 @@ function loadClient() {
 }
 
 /**
- *
- * Get authenticated user's primary mail
- * TODO: Use openid
- */
-export async function getPrimaryEmail(token: string) {
-  gapi.client.setToken({ access_token: token });
-  console.log({ token });
-  // gapi.client.setApiKey(secrets.googleApiClientId);
-
-  const resp = await gapi.client.people.people.get({
-    resourceName: 'people/me',
-    personFields: 'emailAddresses',
-  });
-
-  if (resp.status === 200 && resp.result.emailAddresses) {
-    const primaryEmail = resp.result.emailAddresses.find((email) => {
-      return email.metadata?.primary;
-    });
-
-    if (primaryEmail) {
-      return primaryEmail;
-    }
-  }
-
-  return null;
-}
-
-/**
  * Get authenticated user's contacts
  */
 export async function getUsersContacts(token: string) {

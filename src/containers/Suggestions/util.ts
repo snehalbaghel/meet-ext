@@ -11,6 +11,8 @@ export function getExampleText(entity: string) {
     case 'time':
     case 'time_value':
       return ' time:16.30 (24hr format)';
+    case 'login':
+      return 'Login to your google accounts';
     default:
       return 'example not available';
   }
