@@ -130,7 +130,6 @@ const getCommandPlugin = (
       },
       // apply tr to produce new state
       apply(tr, state: CommandState) {
-        console.log({ tr });
         const cursorPos = tr.selection.to;
         const text = tr.doc.textBetween(0, cursorPos);
         let newState: Partial<CommandState> = {};
@@ -291,10 +290,10 @@ const getCommandPlugin = (
           return false;
         }
 
-        const enter = e.keyCode === 13;
-        const down = e.keyCode === 40;
-        const up = e.keyCode === 38;
-        const esc = e.keyCode === 27;
+        const enter = e.code === 'Enter';
+        const down = e.code === 'ArrowDown';
+        const up = e.code === 'ArrowUp';
+        const esc = e.code === 'Escape';
 
         if (up) {
           // Prev

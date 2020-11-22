@@ -50,7 +50,7 @@ class RichTextEditor extends React.Component<CommandLineProps> {
           keymap({
             'Mod-z': undo,
             'Mod-Shift-z': redo,
-            'Shift-Enter': this.executeTr,
+            'Mod-/': this.executeTr,
             'Mod-Space': this.recalculateSuggestions,
             'Mod-u': this.resetState,
           }),
