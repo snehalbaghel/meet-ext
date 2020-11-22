@@ -47,16 +47,16 @@ const defaults = { icon: 'date.png', entity: 'date_value', freeText: true };
 const dateSuggestions: Meta[] = getMetas(
   [
     {
+      name: 'today',
+      description: 'Today',
+    },
+    {
       name: 'tomorrow',
       description: 'Tomorrow',
     },
     {
       name: 'dayafter',
       description: 'Day after tomorrow',
-    },
-    {
-      name: 'today',
-      description: 'Today',
     },
   ],
   defaults
@@ -84,9 +84,13 @@ function suggestDate(matchStr: string, nodeType?: string) {
     return getMetas([{ name: matchStr, description: description }], defaults);
   }
 
-  return dateSuggestions.filter((meta) => {
+  const filtered = dateSuggestions.filter((meta) => {
     return meta.name.toLowerCase().startsWith(matchStr);
   });
+
+  filtered.push({ name: matchStr, description: '4jan (ddMMM)', ...defaults });
+
+  return filtered;
 }
 
 /**

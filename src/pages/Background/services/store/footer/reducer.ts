@@ -1,7 +1,7 @@
 import { UPDATE_FOOTER, FooterState, FooterActionTypes } from './types';
 
 const initialState: FooterState = {
-  text: 'Use ▲,▼,↩ to use suggestions Mod + / to execute',
+  text: 'Use ▲,▼,↩ to use suggestions, mod+/ to execute',
   success: true,
 };
 

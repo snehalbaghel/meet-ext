@@ -39,8 +39,8 @@ function suggestDuration(matchStr: string, nodeType?: string) {
     {
       name: matchStr,
       description: description,
-      icon: 'time.png',
-      entity: 'time_value',
+      icon: 'duration.png',
+      entity: 'duration_value',
       freeText: true,
     },
   ];
@@ -61,7 +61,7 @@ export default new TokenGroup({
   nodeType: 'key',
   tokens: [
     {
-      name: 'duration',
+      name: 'dura',
       description: 'Duration',
       icon: 'duration.png',
       entity: 'duration',

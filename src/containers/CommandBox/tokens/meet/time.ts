@@ -54,7 +54,7 @@ function suggestTime(matchStr: string, nodeType?: string) {
       name: matchStr,
       description: description,
       entity: 'time_value',
-      icon: 'time',
+      icon: 'time.png',
       freeText: true,
     },
   ];

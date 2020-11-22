@@ -2,18 +2,13 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import CommandBox from '../../containers/CommandBox';
 import styled from 'styled-components';
-import HistoryIcon from '@material-ui/icons/History';
+import FlashOnIcon from '@material-ui/icons/FlashOn';
 import Suggestions from '../../containers/Suggestions';
 import { ParsedCommand, Token } from '../../containers/CommandBox/types';
 import { Meta } from '../../containers/CommandBox/tokens';
 import { Paper } from '@material-ui/core';
 import { loginUser } from './backgroundActions';
-
-const FlexContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  padding-bottom: 0;
-`;
+import Footer from '../../containers/Footer';
 
 const CommandWrapper = styled(Paper)`
   /* height: 56px; */
@@ -22,10 +17,11 @@ const CommandWrapper = styled(Paper)`
   margin: 8px;
   margin-bottom: 0px;
   font-family: 'Ubuntu Mono', monospace;
+  border-color: #018cde !important;
 `;
 
-const SubtitleIcon = styled(HistoryIcon)`
-  font-size: 18px;
+const SubtitleIcon = styled(FlashOnIcon)`
+  font-size: 1.15rem;
   padding: 4px;
 `;
 
@@ -38,6 +34,7 @@ const Subtitle = styled.span`
 `;
 
 const SuggestionPanel = styled.div`
+  flex-grow: 1;
   display: flex;
   flex-direction: column;
   overflow-y: auto;
@@ -119,7 +116,7 @@ const Popup: React.FC = () => {
   });
 
   return (
-    <FlexContainer>
+    <>
       <CommandWrapper variant="outlined">
         <CommandBox
           aria-label="command box"
@@ -130,12 +127,13 @@ const Popup: React.FC = () => {
       </CommandWrapper>
       <Subtitle aria-label="subtitle">
         <SubtitleIcon fontSize="small" />
-        History
+        Suggestions
       </Subtitle>
       <SuggestionPanel aria-label="suggestion list">
         <Suggestions suggestions={popper.suggestions} active={active} />
       </SuggestionPanel>
-    </FlexContainer>
+      <Footer />
+    </>
   );
 };
 

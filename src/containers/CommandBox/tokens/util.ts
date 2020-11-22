@@ -21,11 +21,11 @@ export const getMetas: (
   return metas.map((m) => {
     if (m.name) {
       return {
-        ...defaults,
         name: m.name || '',
         description: m.description || m.name,
         entity: m.entity || m.name,
         icon: m.icon || m.name + '.png',
+        ...defaults,
       };
     } else {
       throw new Error('Name not defined');
