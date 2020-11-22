@@ -14,7 +14,7 @@
     "resolveJsonModule": true,
     "noEmit": false,
     "jsx": "react",
-    "types": ["chrome", "node", "gapi", "gapi.client.calendar", "gapi.client.people"]
+    "types": ["chrome", "node", "gapi", "gapi.client.calendar", "gapi.client.people"],
   },
   "include": ["src"],
   "exclude": ["build", "node_modules"]

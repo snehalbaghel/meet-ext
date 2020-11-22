@@ -5,7 +5,9 @@ var webpack = require('webpack'),
   { CleanWebpackPlugin } = require('clean-webpack-plugin'),
   CopyWebpackPlugin = require('copy-webpack-plugin'),
   HtmlWebpackPlugin = require('html-webpack-plugin'),
-  TerserPlugin = require('terser-webpack-plugin');
+  TerserPlugin = require('terser-webpack-plugin'),
+  supportedLocales = require('./utils/supportedLocales')
+  ;
 
 const ASSET_PATH = process.env.ASSET_PATH || '/';
 
@@ -104,6 +106,10 @@ var options = {
       .concat(['.js', '.jsx', '.ts', '.tsx', '.css']),
   },
   plugins: [
+    new webpack.ContextReplacementPlugin(
+      /date\-fns[\/\\]/,
+      new RegExp(`[/\\\\\](${supportedLocales.join('|')})[/\\\\\]index\.js$`)
+    ),
     new webpack.ProgressPlugin(),
     // clean the build folder
     new CleanWebpackPlugin({
