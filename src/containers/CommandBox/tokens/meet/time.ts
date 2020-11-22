@@ -18,17 +18,17 @@ function parseTime(input: string, _props: Meta) {
   input = input.trim();
 
   try {
-    if (input.length <= 3) {
-      // 10 or 10.
-      if (input.endsWith('.')) {
-        input = input.slice(0, -1);
-      }
-
-      return parse(input, 'H', new Date());
-    } else {
-      // 10.30
-      return parse(input, 'H.m', new Date());
+    if (input.endsWith('.')) {
+      input = input.slice(0, -1);
     }
+
+    let parsed = parse(input, 'k', new Date());
+
+    if (isNaN(parsed.getTime())) {
+      parsed = parse(input, 'k.m', new Date());
+    }
+
+    return parsed;
   } catch (error) {
     console.error({ error });
   }
@@ -45,6 +45,7 @@ function suggestTime(matchStr: string, nodeType?: string) {
   let description = 'Type value..';
 
   if (parsed) {
+    console.log({ parsed });
     description = format(parsed, 'hh:mm b');
   }
 
