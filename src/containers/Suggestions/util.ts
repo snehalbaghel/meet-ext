@@ -12,9 +12,11 @@ export function getExampleText(entity: string) {
     case 'time_value':
       return ' time:16.30 (24hr format)';
     case 'login':
-      return 'Login to your google accounts';
+      return 'login <you@gmail.com>';
     case 'email':
       return 'with:jane@doe.com,john@doe.com';
+    case 'auth':
+      return 'auth:your@gmail.com';
     default:
       return 'example not available';
   }

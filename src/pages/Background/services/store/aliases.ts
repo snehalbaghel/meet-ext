@@ -9,7 +9,8 @@ import { User } from './users/types';
 import getHours from 'date-fns/getHours';
 import getMinutes from 'date-fns/getMinutes';
 import setDate from 'date-fns/set';
-import { add } from 'date-fns';
+import add from 'date-fns/add';
+import differenceInMinutes from 'date-fns/differenceInMinutes';
 import { makeMeeting } from '../gapiHelper';
 
 export const LOGIN_USER = 'LOGIN_USER';
@@ -40,6 +41,7 @@ function loginUser({
       img: token.user.picture,
       idToken: token.idToken,
       name: `${token.user.given_name} ${token.user.family_name}`,
+      updatedAt: new Date().toISOString(),
     };
 
     return dispatch(addUser(userToAdd));
@@ -67,6 +69,8 @@ function createMeeting({
     let endDateTime = new Date(startDateTime);
     let attendees: { email: string }[] = [];
     let title = 'Created by meet-ext';
+    const userSelectedAuthUser: unknown = entities['auth'][0];
+    let authUser: string = <string>userSelectedAuthUser || '';
 
     // Merge all date entities
     if (entities['date'] && entities['date'].length) {
@@ -101,18 +105,37 @@ function createMeeting({
 
     let { users } = getState();
     let allUsers = users.users;
+    const defaultId = users.default_id;
 
     // If no user has logged in then open a login window
     // TODO: Check for expired tokens
-    if (Object.keys(allUsers).length === 0) {
-      await dispatch(loginUser({ prompt: false, loginHint: '' }));
-      users = getState().users;
-      allUsers = users.users;
+    if (allUsers[authUser || defaultId]) {
+      const defaultUser = allUsers[authUser || defaultId];
+
+      // Check if the token has expired
+      const tokenAgeInMinutes = differenceInMinutes(
+        new Date(),
+        new Date(defaultUser.updatedAt)
+      );
+
+      if (tokenAgeInMinutes > 55) {
+        // Authenticate again
+        await dispatch(
+          loginUser({ prompt: false, loginHint: defaultUser.email })
+        );
+      }
+    } else {
+      await dispatch(
+        loginUser({ prompt: false, loginHint: authUser || defaultId || '' })
+      );
     }
 
-    const tokenToUse = allUsers[users.default_id].accessToken;
+    users = getState().users;
+    allUsers = users.users;
 
-    const response = await makeMeeting(
+    const tokenToUse = allUsers[authUser || users.default_id].accessToken;
+
+    const status = await makeMeeting(
       startDateTime,
       endDateTime,
       attendees,
@@ -120,10 +143,12 @@ function createMeeting({
       tokenToUse
     );
 
-    if (response.status === 200) {
-      dispatch(updateFooter('Created and shared event!', true));
+    if (status === 200) {
+      dispatch(updateFooter('Created event. Check you calendar!', true));
+    } else if (status === 401) {
+      dispatch(updateFooter('Authentication failed..', false));
     } else {
-      dispatch(updateFooter('Something went wrong.', false));
+      dispatch(updateFooter('Something went wrong..', false));
     }
   };
 }

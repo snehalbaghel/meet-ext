@@ -1,5 +1,5 @@
 import React from 'react';
-import HistorySuggestionItem from './history';
+// import HistorySuggestionItem from './history';
 import CommandSuggestionItem from './command';
 import { Meta } from '../CommandBox/tokens';
 import { Token } from '../CommandBox/types';
@@ -14,6 +14,7 @@ const Suggestions: React.FC<SuggestionsProps> = ({ suggestions, active }) => {
     <>
       {suggestions.map((s, i) => (
         <CommandSuggestionItem
+          id={'sugg_item_no_' + i}
           key={'cmd_' + i}
           suggestion={s}
           active={active === i}

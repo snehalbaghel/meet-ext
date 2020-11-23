@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useCallback, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import CommandBox from '../../containers/CommandBox';
 import styled from 'styled-components';
 import FlashOnIcon from '@material-ui/icons/FlashOn';
@@ -61,7 +61,6 @@ const SuggestionPanel = styled.div`
 
 const Popup: React.FC = () => {
   const dispatch = useDispatch();
-  // const listRef = useRef(null);
 
   const [popper, setPopper] = useState<{
     open: boolean;
@@ -91,17 +90,16 @@ const Popup: React.FC = () => {
 
   const updateSelection = useCallback((i: number) => {
     setActive(i);
-
-    // if (listRef.current) {
-    // @ts-ignore
-    // listRef.current.scrollToItem(i ? i : 0);
-    // }
+    const element = document.getElementById('sugg_item_no_' + i);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
   }, []);
 
   const execute = useCallback((parsed: ParsedCommand, textDirty: string) => {
     switch (parsed.cmd) {
       case 'login':
-        dispatch(loginUser());
+        dispatch(loginUser(true, textDirty.replace(/[:, ]/g, '').trim()));
         break;
       case 'meet':
         dispatch(createMeeting(parsed, textDirty));

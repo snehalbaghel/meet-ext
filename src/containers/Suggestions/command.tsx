@@ -13,10 +13,12 @@ import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty';
 import EventIcon from '@material-ui/icons/Event';
 import ScheduleIcon from '@material-ui/icons/Schedule';
 import AlternateEmailIcon from '@material-ui/icons/AlternateEmail';
+import VpnKeyIcon from '@material-ui/icons/VpnKey';
 
 export interface CommandSuggestionProps {
   suggestion: Token<Meta>;
   active: boolean;
+  id: string;
 }
 
 const CommandText = styled.span`
@@ -55,27 +57,33 @@ function getSuggestionImage(img: string) {
       return 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/200px-Google_%22G%22_Logo.svg.png';
     case 'email.png':
       return <AlternateEmailIcon />;
+    case 'auth.png':
+      return <VpnKeyIcon />;
     default:
+      return img;
   }
 }
 
 const CommandSuggestionItem: React.FC<CommandSuggestionProps> = ({
   suggestion,
   active,
+  id,
 }) => {
   let src = null;
   let icon = getSuggestionImage(suggestion.props.icon);
 
   if (typeof icon === 'string') {
     src = icon;
-    icon = undefined;
+    icon = '';
   }
 
   return (
     <ListItem
       aria-label="command suggestion item"
       selected={active}
+      autoFocus={true}
       alignItems="flex-start"
+      id={id}
     >
       <ListItemAvatar>
         <CommandImage

@@ -17,6 +17,6 @@ export function updateFooter(
     // TODO: Clear timeout somehow
     setTimeout(() => {
       dispatch({ type: RESET_FOOTER });
-    }, 10000);
+    }, 15000);
   };
 }

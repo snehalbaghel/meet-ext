@@ -64,5 +64,5 @@ export async function makeMeeting(
     },
   });
 
-  return resp;
+  return resp.status;
 }

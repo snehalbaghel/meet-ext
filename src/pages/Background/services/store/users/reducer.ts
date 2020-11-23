@@ -1,9 +1,10 @@
 import { ADD_USER, UserActionTypes, UsersState } from './types';
 
 const USER_STATE_KEY = 'USER_STATE_KEY';
+const DEFAULT_USER_ID_KEY = 'DEFAULT_USER_ID_KEY';
 
 const intialState: UsersState = {
-  default_id: '',
+  default_id: localStorage.getItem(DEFAULT_USER_ID_KEY) || '',
   users: JSON.parse(localStorage.getItem(USER_STATE_KEY) || '{}'),
 };
 
@@ -22,7 +23,8 @@ export default function usersReducer(
         },
       };
 
-      localStorage.setItem(USER_STATE_KEY, JSON.stringify(newState));
+      localStorage.setItem(USER_STATE_KEY, JSON.stringify(newState.users));
+      localStorage.setItem(DEFAULT_USER_ID_KEY, newState.default_id);
 
       return newState;
     default:

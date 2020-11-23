@@ -4,8 +4,8 @@ import {
   CREATE_MEETING,
 } from '../Background/services/store/aliases';
 
-export function loginUser() {
-  return { type: LOGIN_USER };
+export function loginUser(prompt: boolean, loginHint: string) {
+  return { type: LOGIN_USER, prompt, loginHint };
 }
 
 export function createMeeting(parsed: ParsedCommand, rawText: string) {

@@ -4,6 +4,7 @@ export interface User {
   img: string;
   accessToken: string;
   idToken: string;
+  updatedAt: string;
 }
 
 export interface UsersState {
