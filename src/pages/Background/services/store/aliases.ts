@@ -56,7 +56,18 @@ function createMeeting({
   rawText: string;
 }): ThunkAction<void, RootState, unknown, Action<string>> {
   return async (dispatch, getState) => {
-    console.log(parsed, rawText);
+    // defaults
+    let startDateTime = new Date();
+    let endDateTime = new Date(startDateTime);
+    let attendees: { email: string }[] = [];
+    let title = 'Created by meet-ext';
+    let authUser = '';
+    // Pull out default_id rom store
+    let { users } = getState();
+    let allUsers = users.users;
+    const defaultID = users.default_id;
+
+    // Process all entities
     const { keyVals } = parsed;
     const entities: { [key: string]: any[] } = {};
 
@@ -64,13 +75,13 @@ function createMeeting({
       entities[kv.entity] = kv.val;
     });
 
-    // default: today
-    let startDateTime = new Date();
-    let endDateTime = new Date(startDateTime);
-    let attendees: { email: string }[] = [];
-    let title = 'Created by meet-ext';
-    const userSelectedAuthUser: unknown = entities['auth'][0];
-    let authUser: string = <string>userSelectedAuthUser || '';
+    title = rawText.replace(/[:,]/g, '').trim() || title;
+
+    // Overides default defaultId
+    const authEntity = entities['auth'];
+    if (authEntity && authEntity.length) {
+      authUser = authEntity[0];
+    }
 
     // Merge all date entities
     if (entities['date'] && entities['date'].length) {
@@ -94,6 +105,7 @@ function createMeeting({
       endDateTime = add(endDateTime, { minutes: durationEntity[0] });
     }
 
+    // Who do we send it to
     const emailEntity = entities['email'];
     if (emailEntity && emailEntity.length) {
       emailEntity.forEach((val) => {
@@ -101,16 +113,10 @@ function createMeeting({
       });
     }
 
-    title = rawText.replace(/[:,]/g, '').trim();
-
-    let { users } = getState();
-    let allUsers = users.users;
-    const defaultId = users.default_id;
-
     // If no user has logged in then open a login window
-    // TODO: Check for expired tokens
-    if (allUsers[authUser || defaultId]) {
-      const defaultUser = allUsers[authUser || defaultId];
+    const userID = authUser || defaultID;
+    if (allUsers[userID]) {
+      const defaultUser = allUsers[userID];
 
       // Check if the token has expired
       const tokenAgeInMinutes = differenceInMinutes(
@@ -125,16 +131,16 @@ function createMeeting({
         );
       }
     } else {
-      await dispatch(
-        loginUser({ prompt: false, loginHint: authUser || defaultId || '' })
-      );
+      await dispatch(loginUser({ prompt: false, loginHint: userID || '' }));
     }
 
+    // Refresh state
     users = getState().users;
     allUsers = users.users;
 
     const tokenToUse = allUsers[authUser || users.default_id].accessToken;
 
+    // Finally use
     const status = await makeMeeting(
       startDateTime,
       endDateTime,

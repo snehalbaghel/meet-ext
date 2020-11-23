@@ -1,5 +1,6 @@
 import TokenGroup from '../Editor/TokenGroup';
 import MeetTG from './meet';
+import { authUserValueTG } from './meet/authUser';
 /**
  * Just nested TokenGroups that are linked to each other
  * (See meet folder)
@@ -26,6 +27,19 @@ const LoginTG = new TokenGroup({
   tokens: [loginMeta],
 });
 
-const RootTokenGroups: TokenGroup[] = [MeetTG, LoginTG];
+const setDefaultMeta: Meta = {
+  name: 'setdefault',
+  description: 'Set the default auth user',
+  entity: 'setdefault',
+  icon: 'auth.png',
+};
+
+const SetDefaultTG = new TokenGroup({
+  nodeType: 'root',
+  tokens: [setDefaultMeta],
+  next: [authUserValueTG],
+});
+
+const RootTokenGroups: TokenGroup[] = [MeetTG, LoginTG, SetDefaultTG];
 
 export default RootTokenGroups;

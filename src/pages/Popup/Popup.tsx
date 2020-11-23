@@ -11,6 +11,7 @@ import { loginUser } from './backgroundActions';
 import Footer from '../../containers/Footer';
 import { createMeeting } from './backgroundActions';
 import { updateFooter } from '../Background/services/store/footer/actions';
+import { setDefaultAuthUser } from '../Background/services/store/users/actions';
 
 const CommandWrapper = styled(Paper)`
   /* height: 56px; */
@@ -104,11 +105,17 @@ const Popup: React.FC = () => {
       case 'meet':
         dispatch(createMeeting(parsed, textDirty));
         break;
+      case 'setdefault':
+        const setDefault = parsed.keyVals.find((kv) => kv.key === 'unknown');
+
+        if (setDefault && setDefault.val) {
+          dispatch(setDefaultAuthUser(setDefault.val));
+        }
+        break;
       default:
         dispatch(updateFooter('Invalid command', false));
         break;
     }
-    // console.log({ parsed, textDirty });
     return true;
   }, []);
 

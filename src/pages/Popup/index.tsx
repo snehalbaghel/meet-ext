@@ -1,12 +1,15 @@
 import React from 'react';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
-import { Store } from 'webext-redux';
+import { Store, applyMiddleware } from 'webext-redux';
 import Popup from './Popup';
 import './index.css';
 import { ThemeProvider } from 'styled-components';
+import thunkMiddleware from 'redux-thunk';
 
-const store = new Store();
+let store = new Store();
+
+store = applyMiddleware(store, thunkMiddleware);
 
 const theme = {
   commandBlue: '#006E9B',

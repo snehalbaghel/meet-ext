@@ -1,6 +1,10 @@
 import { Meta } from '..';
 import TokenGroup from '../../Editor/TokenGroup';
 import store from '../../../../pages/Background/services/store';
+import { DEFAULT_USER_ID_KEY } from '../../../../pages/Background/services/store/users/reducer';
+
+// store.subscribe(matchAuthUser);
+
 /**
  * Create the key value pair
  */
@@ -14,12 +18,19 @@ function matchAuthUser(matchStr: string, nodeType?: string): Meta[] {
       id.startsWith(matchStr)
     );
 
-    const metas: Meta[] = matches.map((user_id) => ({
-      name: user_id,
-      description: usersDict[user_id].name,
-      entity: 'auth',
-      icon: usersDict[user_id].img,
-    }));
+    const metas: Meta[] = matches.map((user_id) => {
+      let description = usersDict[user_id].name;
+      if (user_id === localStorage.getItem(DEFAULT_USER_ID_KEY)) {
+        description += ' (Default)';
+      }
+
+      return {
+        name: user_id,
+        description,
+        entity: 'auth',
+        icon: usersDict[user_id].img,
+      };
+    });
 
     return metas;
   }
@@ -35,7 +46,7 @@ function matchAuthUser(matchStr: string, nodeType?: string): Meta[] {
   ];
 }
 
-export const userValueTG = new TokenGroup({
+export const authUserValueTG = new TokenGroup({
   nodeType: 'value',
   leaf: true,
   match: matchAuthUser,
@@ -51,5 +62,5 @@ export default new TokenGroup({
       entity: 'auth',
     },
   ],
-  next: [userValueTG],
+  next: [authUserValueTG],
 });

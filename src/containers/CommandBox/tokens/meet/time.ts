@@ -45,7 +45,6 @@ function suggestTime(matchStr: string, nodeType?: string) {
   let description = 'Type value..';
 
   if (parsed) {
-    console.log({ parsed });
     description = format(parsed, 'hh:mm b');
   }
 

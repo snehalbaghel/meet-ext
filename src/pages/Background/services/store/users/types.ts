@@ -18,16 +18,25 @@ export interface UsersState {
 
 export const ADD_USER = 'ADD_USER';
 export const DELETE_USER = 'DELETE_USER';
-export const REFRESH_USER = 'REFRESH_USER';
+export const SET_DEFAULT_AUTH_USER = 'SET_DEFAULT_AUTH_USER';
 
 interface AddUserAction {
   type: typeof ADD_USER;
   payload: User;
 }
 
+// TODO
 interface DeleteUserAction {
   type: typeof DELETE_USER;
   id: string;
 }
 
-export type UserActionTypes = AddUserAction | DeleteUserAction;
+interface SetDefaultUserAction {
+  type: typeof SET_DEFAULT_AUTH_USER;
+  id: string;
+}
+
+export type UserActionTypes =
+  | AddUserAction
+  | DeleteUserAction
+  | SetDefaultUserAction;

@@ -97,8 +97,6 @@ export async function authorize(prompt?: boolean, loginHint?: string) {
     url: authUrl,
   });
 
-  console.log({ redirectURL });
-
   try {
     const user = await validate(redirectURL);
     return user;
