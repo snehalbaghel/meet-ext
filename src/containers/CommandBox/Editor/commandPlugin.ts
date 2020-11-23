@@ -36,7 +36,9 @@ function resetState() {
       from: 0,
     },
     activeSelectionIndex: 0,
-    suggestions: [],
+    suggestions: RootTokenGroups.flatMap((tg) => {
+      return tg.match('', 'root');
+    }),
     rootCommand: '',
     prevTrigger: null,
     token: '',
@@ -88,7 +90,6 @@ const getCommandPlugin = (
     //     return tg.match(match, 'flag');
     //   });
     // }
-
     if (curIndex !== -1) {
       if ([',', ':'].includes(trigger!)) {
         token =
@@ -227,8 +228,6 @@ const getCommandPlugin = (
             newState.activeSelectionIndex = 0;
           } else if (action === 'reset') {
             newState = resetState();
-          } else if (action === 'refresh_state') {
-            // TODO
           }
         } else if (commandMatch) {
           const token = commandMatch?.groups?.token;
@@ -240,32 +239,17 @@ const getCommandPlugin = (
           const to = cursorPos;
           const from = to - (token?.length || 0);
 
-          //
           newState.activeSelection = {
             to,
             from,
           };
 
-          /**
-           * Suggest root tokens
-           */
-          if (nodeStack.length === 0) {
-            // if (token) {
-            newState.suggestions = RootTokenGroups.flatMap((tg) => {
-              return tg.match(token || '', 'root');
-            });
-
-            newState.activeSelectionIndex = 0;
-            // }
-            /* Suggest next */
-          } else {
-            newState.suggestions = getSuggestions(
-              nodeStack,
-              token || '',
-              trigger
-            );
-            newState.activeSelectionIndex = 0;
-          }
+          newState.suggestions = getSuggestions(
+            nodeStack,
+            token || '',
+            trigger
+          );
+          newState.activeSelectionIndex = 0;
 
           newState.prevTrigger = state.prevTrigger === ',' ? ',' : trigger;
         }
