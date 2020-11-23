@@ -12,6 +12,7 @@ import { getExampleText } from './util';
 import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty';
 import EventIcon from '@material-ui/icons/Event';
 import ScheduleIcon from '@material-ui/icons/Schedule';
+import AlternateEmailIcon from '@material-ui/icons/AlternateEmail';
 
 export interface CommandSuggestionProps {
   suggestion: Token<Meta>;
@@ -52,6 +53,8 @@ function getSuggestionImage(img: string) {
       return <HourglassEmptyIcon />;
     case 'login.png':
       return 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/200px-Google_%22G%22_Logo.svg.png';
+    case 'email.png':
+      return <AlternateEmailIcon />;
     default:
   }
 }

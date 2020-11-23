@@ -2,7 +2,6 @@ import { extractTokens } from '../util';
 import { browser } from 'webextension-polyfill-ts';
 import { v4 as uuid } from 'uuid';
 import jwt_decode from 'jwt-decode';
-import { getUsersContacts, makeMeeting } from './gapi';
 // @ts-ignore
 import secrets from 'secrets';
 
@@ -82,17 +81,23 @@ Authenticate and authorize using browser.identity.launchWebAuthFlow().
 If successful, this resolves with a redirectURL string that contains
 an access token.
 */
-export async function authorize(prompt?: boolean) {
+export async function authorize(prompt?: boolean, loginHint?: string) {
   let authUrl = AUTH_URL;
 
   if (prompt) {
     authUrl += '&prompt=select_account';
   }
 
+  if (loginHint) {
+    authUrl += `&login_hint=${loginHint}`;
+  }
+
   const redirectURL = await browser.identity.launchWebAuthFlow({
     interactive: true,
     url: authUrl,
   });
+
+  console.log({ redirectURL });
 
   try {
     const user = await validate(redirectURL);

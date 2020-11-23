@@ -1,7 +1,7 @@
 export function getExampleText(entity: string) {
   switch (entity) {
     case 'meet':
-      return 'meet <email@gmail.com> <title>';
+      return 'meet <meeting_title> <args>';
     case 'date':
     case 'date_value':
       return ' date:16jan';
@@ -13,6 +13,8 @@ export function getExampleText(entity: string) {
       return ' time:16.30 (24hr format)';
     case 'login':
       return 'Login to your google accounts';
+    case 'email':
+      return 'with:jane@doe.com,john@doe.com';
     default:
       return 'example not available';
   }

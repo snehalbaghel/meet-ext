@@ -43,7 +43,7 @@ function resetState() {
   };
 }
 
-const lastTokenRegex = /(?<rest>.*?)(?<trigger>\s{2}|[\s:,]{0,1})(?<token>(?<=[:,])\w+[\s\w(-.]+\)?|\w+)?$/;
+const lastTokenRegex = /(?<rest>.*?)(?<trigger>\s{2}|[\s:,]{0,1})(?<token>(?<=[:,])\w+[\s\w(.@-]+\)?|\w+)?$/;
 
 /**
  * Basically the middleware responsible for reacting to text and creating nodes accordingly

@@ -9,6 +9,8 @@ import { Meta } from '../../containers/CommandBox/tokens';
 import { Paper } from '@material-ui/core';
 import { loginUser } from './backgroundActions';
 import Footer from '../../containers/Footer';
+import { createMeeting } from './backgroundActions';
+import { updateFooter } from '../Background/services/store/footer/actions';
 
 const CommandWrapper = styled(Paper)`
   /* height: 56px; */
@@ -102,18 +104,15 @@ const Popup: React.FC = () => {
         dispatch(loginUser());
         break;
       case 'meet':
+        dispatch(createMeeting(parsed, textDirty));
         break;
       default:
+        dispatch(updateFooter('Invalid command', false));
         break;
     }
-    console.log({ parsed, textDirty });
+    // console.log({ parsed, textDirty });
     return true;
-    // TODO
   }, []);
-
-  useSelector((state) => {
-    console.log({ state });
-  });
 
   return (
     <>

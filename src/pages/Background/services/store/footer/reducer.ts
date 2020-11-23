@@ -1,4 +1,9 @@
-import { UPDATE_FOOTER, FooterState, FooterActionTypes } from './types';
+import {
+  UPDATE_FOOTER,
+  RESET_FOOTER,
+  FooterState,
+  FooterActionTypes,
+} from './types';
 
 const initialState: FooterState = {
   text: 'Use ▲,▼,↩ to use suggestions, mod+/ to execute',
@@ -15,6 +20,8 @@ export default function footerReducer(
         text: action.text,
         success: action.success,
       };
+    case RESET_FOOTER:
+      return initialState;
     default:
       return state;
   }

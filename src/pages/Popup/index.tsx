@@ -19,6 +19,7 @@ const theme = {
   greyLight: '#ebebeb',
   greyLighter: '#F2F3F3',
   greyLightest: '#F0F0F0',
+  funPurple: '#F0F0FA',
 };
 
 store.ready().then(() => {

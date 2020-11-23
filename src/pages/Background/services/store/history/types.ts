@@ -6,6 +6,7 @@ export interface HistoryItem {
   user: string;
 }
 
+// TODO
 export interface HistoryState {
   [id: string]: HistoryItem;
 }

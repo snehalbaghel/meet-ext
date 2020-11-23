@@ -23,7 +23,7 @@ export default class TokenGroup {
   parse: (raw: string, props: Meta) => any;
   tokens: Token<Meta>[] = [];
   next: TokenGroup[] | undefined;
-  match: (matchStr: string, nodeType?: string | undefined) => Token<Meta>[];
+  match: (matchStr: string, nodeType?: string) => Token<Meta>[];
 
   constructor({
     nodeType,

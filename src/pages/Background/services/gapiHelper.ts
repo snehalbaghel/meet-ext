@@ -1,12 +1,13 @@
 import { toRFC3339Format } from '../util';
 import { v4 as uuid } from 'uuid';
+// import 'gapi';
 
 gapi.load('client', loadClient);
 
 function loadClient() {
-  gapi.client.load('auth2', 'v1');
+  // gapi.client.load('auth2', 'v1');
   gapi.client.load('calendar', 'v3');
-  gapi.client.load('people', 'v1');
+  // gapi.client.load('people', 'v1');
 }
 
 /**
@@ -30,28 +31,29 @@ export async function getUsersContacts(token: string) {
 /**
  * Schedule a Google meet conference
  */
-export async function makeMeeting(token: string) {
-  // https://www.googleapis.com/auth/calendar.events
+export async function makeMeeting(
+  startDate: Date,
+  endDate: Date,
+  attendees: { email: string }[],
+  title: string,
+  token: string
+) {
+  // scope: https://www.googleapis.com/auth/calendar.events
 
   gapi.client.setToken({ access_token: token });
-
-  const startTime = new Date();
-  const endTime = new Date(startTime);
-
-  endTime.setMinutes(startTime.getMinutes() + 30);
 
   const resp = await gapi.client.calendar.events.insert({
     calendarId: 'primary',
     sendUpdates: 'all',
     conferenceDataVersion: 1,
     resource: {
-      attendees: [{ email: 'snehal@rivi.ai' }],
-      summary: 'Created by meet-ext',
+      attendees,
+      summary: title,
       start: {
-        dateTime: toRFC3339Format(startTime),
+        dateTime: toRFC3339Format(startDate),
       },
       end: {
-        dateTime: toRFC3339Format(endTime),
+        dateTime: toRFC3339Format(endDate),
       },
       conferenceData: {
         createRequest: {
@@ -62,5 +64,5 @@ export async function makeMeeting(token: string) {
     },
   });
 
-  return resp.result;
+  return resp;
 }
