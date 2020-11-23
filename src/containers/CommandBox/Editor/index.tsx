@@ -58,6 +58,7 @@ class ProseMirrorEditorView extends React.Component<PMEditorViewProps> {
     }
   }
 
+  // TODO: Change this
   componentWillReceiveProps(nextProps: PMEditorViewProps) {
     // In case we receive new EditorState through props — we apply it to the
     // EditorView instance.
@@ -71,6 +72,11 @@ class ProseMirrorEditorView extends React.Component<PMEditorViewProps> {
 
   componentDidMount() {
     this.focus();
+    if (this._editorView) {
+      this.dispatchTransaction(
+        this._editorView.state.tr.setMeta('action', 'recalculate')
+      );
+    }
   }
 
   componentWillUnmount() {
