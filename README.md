@@ -1,4 +1,4 @@
-# Google Meets Extension
+# Google Meet Extension
 
 Based on Michael Xieyang Liu's [boilerplate](https://github.com/lxieyang/chrome-extension-boilerplate-react)
 
